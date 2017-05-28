@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Popular Movies - Stage 2</string>
+    <string name="title_medium_detail">Medium Detail</string>
+    <string name="media_poster">Media Poster</string>
+    <string name="media_popular">popular</string>
+    <string name="media_top_rated">top_rated</string>
+    <string name="medium_detail_template_text">Loading &#8230;</string>
+    <string name="medium_fragment_releasedt_header">Release date: </string>
+    <string name="medium_fragment_rating_header">Rating: </string>
+    <string name="media_density_185">w185/</string>
+    <string name="media_density_342">w342/</string>
+    <string name="media_density_500">w500/</string>
+    <string name="media_density_780">w780/</string>
+    <string name="medium_image_uri">http://image.tmdb.org/t/p/</string>
+    <string name="medium_tmdb_api">http://api.themoviedb.org/3/movie/</string>
+    <string name="media_network_connection">Please check you network connection</string>
+</resources>
