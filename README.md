@@ -13,6 +13,12 @@ Tablet Version (Pixel C)
 
 ![Popular Movies tablet application](screenshots/pixelc_screenshot1_med.png?raw=true "Stage 2")
 
+Phone Version (Pixel)
+
+![Popular Movies phone application](screenshots/pixel_screenshot0_med.png?raw=true "Stage 2")
+
+![Popular Movies phone application](screenshots/pixel_screenshot1_med.png?raw=true "Stage 2")
+
 
 ## Application architecture (generated using the quickwindiagram tool)
 TBD
