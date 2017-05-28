@@ -207,16 +207,16 @@ public class MediumListActivity extends AppCompatActivity {
 
         int density = metrics.densityDpi;
 
-        if (density < DENSITY_280) {
+        if (density <= DENSITY_280) {
             mScreenDensity = getResources().getString(R.string.media_density_185);
             mScreenColumn = DENSITY_185;
         }
 
-        else if (density < DENSITY_480) {
+        else if (density <= DENSITY_480) {
             mScreenDensity = getResources().getString(R.string.media_density_342);
             mScreenColumn = DENSITY_342;
         }
-        else if (density < DENSITY_570) {
+        else if (density <= DENSITY_570) {
 
             mScreenDensity = getResources().getString(R.string.media_density_500);
             mScreenColumn =  DENSITY_500;
