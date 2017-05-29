@@ -17,8 +17,6 @@
         android:orientation="vertical"
         android:id="@+id/medium_detail_linearlayout_fab">
 
-
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -163,11 +161,12 @@
         android:id="@+id/medium_detail_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clickable="true"
         android:layout_margin="10dp"
+        android:clickable="true"
+        android:src="@drawable/ic_action_favorite_border"
+        app:backgroundTint="@color/colorPrimaryDark"
         app:layout_anchor="@+id/medium_detail_linearlayout_fab"
-        app:layout_anchorGravity="top|right"
-        android:src="@drawable/ic_favorite_fab" />
+        app:layout_anchorGravity="top|right" />
 
 
 </android.support.design.widget.CoordinatorLayout>

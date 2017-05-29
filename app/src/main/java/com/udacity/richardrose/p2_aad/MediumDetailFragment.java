@@ -3,6 +3,7 @@ package com.udacity.richardrose.p2_aad;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
@@ -12,6 +13,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -87,6 +89,8 @@ public class MediumDetailFragment extends Fragment {
     private MediumDetailRecyclerViewAdapter    mTrailerAdapter = null;
     private MediumDetailRecyclerViewAdapter    mSimilarAdapter = null;
 
+    private FloatingActionButton mFabFavourite;
+
     RecyclerView mRecyclerViewTrailer;
     RecyclerView mRecyclerViewSimilar;
 
@@ -99,6 +103,8 @@ public class MediumDetailFragment extends Fragment {
     private String mThumbnail   = "";
     private String mOverview    = "";
 
+    private SharedPreferences sharedPref;
+    SharedPreferences.Editor    editor;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -155,12 +161,34 @@ public class MediumDetailFragment extends Fragment {
         setupRecyclerViewSimilar(mRecyclerViewSimilar);
 
         final CoordinatorLayout coordinatorLayout = (CoordinatorLayout) mRootView.findViewById(R.id.medium_detail_coordinatorlayout);
-        FloatingActionButton fab = (FloatingActionButton) mRootView.findViewById(R.id.medium_detail_fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+//        FloatingActionButton fab = (FloatingActionButton) mRootView.findViewById(R.id.medium_detail_fab);
+        mFabFavourite = (FloatingActionButton) mRootView.findViewById(R.id.medium_detail_fab);
+        mFabFavourite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(coordinatorLayout, "Updating favourite setting", Snackbar.LENGTH_LONG)
+
+                // TODO: Add/Remove id to the DB
+                Boolean favouriteSetting = false;
+
+                sharedPref = getContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+                editor = sharedPref.edit();
+                favouriteSetting = sharedPref.getBoolean(mID, favouriteSetting);
+                editor.putBoolean(mID, ((favouriteSetting == true) ? false:true));
+
+                // TODO: Save the changes
+                editor.commit();
+
+                // TODO: Toggle the button
+                if (favouriteSetting)
+                    mFabFavourite.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_favorite));
+                else
+                    mFabFavourite.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_favorite_border));
+
+                // TODO: Show snackbar message on save/unsave
+                Snackbar.make(coordinatorLayout, mTitle + " set to: " + favouriteSetting.toString(),
+                        Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+
             }
         });
 
@@ -467,6 +495,8 @@ public class MediumDetailFragment extends Fragment {
         @Override
         public void onBindViewHolder(final MediumDetailFragment.MediumDetailRecyclerViewAdapter.ViewHolder holder, int position) {
 
+            Boolean favouriteSetting = false;
+
             // Display the title of the media
             holder.mMediumTitle.setText(mMediaDetail.get(position).getTitle());
 
@@ -475,6 +505,16 @@ public class MediumDetailFragment extends Fragment {
                     .load(mMediaDetail.get(position).getThumbnail())
                     .placeholder(movie_placeholder)
                     .into(holder.mMediumPoster);
+
+            // Check which icon to show
+//            SharedPreferences sharedPref = getContext().getSharedPreferences(mMediaDetail.get(position).getID(), Context.MODE_PRIVATE);
+//            favouriteSetting = sharedPref.getBoolean(mMediaDetail.get(position).getID(), favouriteSetting);
+
+//            if (favouriteSetting)
+//                holder.mMediumFavourite.setImageResource(R.drawable.ic_action_favorite);
+//            else
+//                holder.mMediumFavourite.setImageResource(R.drawable.ic_action_favorite_border);
+
 
         }
 
@@ -487,12 +527,14 @@ public class MediumDetailFragment extends Fragment {
             public final View mView;
             public final TextView mMediumTitle;
             public final ImageView mMediumPoster;
+//            public final FloatingActionButton  mMediumFavourite;
 
             public ViewHolder(View view) {
                 super(view);
-                mView = view;
-                mMediumTitle    = (TextView) view.findViewById(R.id.medium_list_title);
-                mMediumPoster   = (ImageView) view.findViewById(R.id.medium_list_poster);
+                mView               = view;
+                mMediumTitle        = (TextView) view.findViewById(R.id.medium_list_title);
+                mMediumPoster       = (ImageView) view.findViewById(R.id.medium_list_poster);
+//                mMediumFavourite    = (FloatingActionButton) view.findViewById(R.id.medium_detail_fab);
             }
         }
     }

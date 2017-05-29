@@ -54,15 +54,15 @@
                 android:ellipsize="end"
                 android:maxLines="1" />
 
-            <ImageView
+            <ImageButton
                 android:id="@+id/media_fav"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
-
-                android:paddingRight="@dimen/medium_list_padding"
+                android:background="@android:color/background_light"
                 android:paddingBottom="@dimen/medium_list_fav"
+                android:paddingRight="@dimen/medium_list_padding"
                 android:src="@drawable/ic_action_favorite_border" />
 
         </RelativeLayout>

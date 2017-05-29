@@ -2,6 +2,8 @@ package com.udacity.richardrose.p2_aad;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.media.Image;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -19,6 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -115,6 +118,7 @@ public class MediumListActivity extends AppCompatActivity {
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
 
+
         if (findViewById(R.id.medium_detail_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-w900dp).
@@ -122,6 +126,7 @@ public class MediumListActivity extends AppCompatActivity {
             // activity should be in two-pane mode.
             mTwoPane = true;
         }
+
 
         // Check network/internet status
         if (getOnlineStatus()) {
@@ -293,7 +298,7 @@ public class MediumListActivity extends AppCompatActivity {
 
                             // TODO: Notify a data set change
                             mMovieAdapter.notifyDataSetChanged();
-//
+
                         } catch (JSONException ex) {
                             ex.printStackTrace();
                         }
@@ -324,11 +329,14 @@ public class MediumListActivity extends AppCompatActivity {
         public MediumListActivity.MediumListRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.medium_list_content, parent, false);
+
             return new MediumListActivity.MediumListRecyclerViewAdapter.ViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(final MediumListActivity.MediumListRecyclerViewAdapter.ViewHolder holder, int position) {
+            SharedPreferences           sharedPreferences;
+            Boolean checkFavouriteSetting = false;
 
             holder.mMediumTitle.setText(mMedia.get(position).getTitle());
             holder.mMediumRating.setText("Rating: " + String.valueOf(mMedia.get(position).getRating()));
@@ -338,7 +346,21 @@ public class MediumListActivity extends AppCompatActivity {
                     .placeholder(movie_placeholder)
                     .into(holder.mMediumPoster);
 
+            // Check SharedPref for setting
+            sharedPreferences = getSharedPreferences("P2_AAD", Context.MODE_PRIVATE);
 
+//            editor = sharedPref.edit();
+            checkFavouriteSetting = sharedPreferences.getBoolean(mMedia.get(position).getID(), checkFavouriteSetting);
+//            favouriteSetting = (favouriteSetting==true) ? false:true;
+//            editor.commit();
+
+            if (checkFavouriteSetting)
+                holder.mMediumFavourite.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_favorite));
+            else
+                holder.mMediumFavourite.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_favorite_border));
+
+
+            // Initiate a click listener for each grid view item
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -364,6 +386,42 @@ public class MediumListActivity extends AppCompatActivity {
                     }
                 }
             });
+
+            // Ensure the favourite button triggers an event
+            holder.mMediumFavourite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    SharedPreferences           sharedPref;
+                    SharedPreferences.Editor    editor;
+
+                    Media Medium =  mMediaInformation.get(holder.getLayoutPosition());
+
+//                    // TODO: Add/Remove id to the DB
+                    Boolean favouriteSetting=false;
+//
+                    sharedPref = getSharedPreferences("P2_AAD", Context.MODE_PRIVATE);
+
+                    editor = sharedPref.edit();
+                    favouriteSetting = sharedPref.getBoolean(Medium.getID(), favouriteSetting);
+                    favouriteSetting = (favouriteSetting==true) ? false:true;
+                    editor.putBoolean(Medium.getID(), favouriteSetting);
+
+//                    // TODO: Save the changes
+                    editor.commit();
+
+//                    // TODO: Toggle the button
+                    if (favouriteSetting)
+                        holder.mMediumFavourite.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_favorite));
+                    else
+                        holder.mMediumFavourite.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_favorite_border));
+
+                    // TODO: Show snackbar message on save/unsave
+                    Snackbar.make(v, "Pressed favourite button",
+                            Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+            });
         }
 
         @Override
@@ -372,10 +430,11 @@ public class MediumListActivity extends AppCompatActivity {
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            public final View mView;
-            public final TextView mMediumTitle;
-            public final TextView mMediumRating;
-            public final ImageView mMediumPoster;
+            public final View       mView;
+            public final TextView   mMediumTitle;
+            public final TextView   mMediumRating;
+            public final ImageView  mMediumPoster;
+            public final ImageButton  mMediumFavourite;
 
             public ViewHolder(View view) {
                 super(view);
@@ -383,6 +442,7 @@ public class MediumListActivity extends AppCompatActivity {
                 mMediumTitle    = (TextView) view.findViewById(R.id.media_title);
                 mMediumRating   = (TextView) view.findViewById(R.id.media_rating);
                 mMediumPoster   = (ImageView) view.findViewById(R.id.media_image);
+                mMediumFavourite = (ImageButton) view.findViewById(R.id.media_fav);
             }
 
         }
