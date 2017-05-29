@@ -20,35 +20,7 @@ Phone Version (Pixel)
 ![Popular Movies phone application](screenshots/pixel_screenshot1_med.png?raw=true "Stage 2")
 
 
-## Application architecture (generated using the quickwindiagram tool)
-TBD
-
-
-Libraries
-  +Picasso
-  +Volley
-
-
-
-### Prerequisites
-
-The project requires the Volley library and a valid TMDB API key to compile and run. A valid TMDB API key can be accessed via the TMDB website.
-
-The Volley library has been cloned at the same directory level as the P1_AAD project.
-Note:
-  Volley has now been moved to the following location: https://github.com/google/volley
-
-i.e.
-
-+ P2_AAD
-  + app
-  + build
-  + gradle
-  + screenshots
-  + volley
-
-
-### How to build
+## How to build
 
 1. git clone https://github.com/rosera/P2_AAD.git
 2. cd P2_AAD
@@ -61,6 +33,36 @@ i.e.
 ![Popular Movies phone application](screenshots/gradle-properties-screenshot.png?raw=true "Gradle Properties")
 
 8. Compile and run the code
+
+## Prerequisites
+
+The project requires the Volley library and a valid TMDB API key to compile and run. A valid TMDB API key can be accessed via the TMDB website.
+
+The Volley library has been cloned at the same directory level as the P1_AAD project.
+Note:## Application architecture (generated using the quickwindiagram tool)
+TBD
+
+Libraries
+  +Picasso
+  +Volley
+
+
+  Volley has now been moved to the following location: https://github.com/google/volley
+
+i.e.
+
++ P2_AAD
+  + app
+  + build
+  + gradle
+  + screenshots
+  + volley
+
+
+## Application architecture (generated using the quickwindiagram tool)
+
+Coming Soon - architecture diagram
+
 
 ## Acknowledgments
 
