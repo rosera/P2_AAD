@@ -34,9 +34,12 @@ public class sqliteMediaDB extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase database) {
-        String CREATE_P2_AAD_TABLE = "CREATE TABLE " + TABLE_NAME +
-                " + id INTEGER PRIMARY_KEY, " +
-                "title TEXT) ";
+        // Create the table
+        String CREATE_P2_AAD_TABLE = "CREATE TABLE " + TABLE_NAME + "(" +
+                "id TEXT PRIMARY_KEY NOT NULL, "  +
+                "title TEXT NOT NULL,"            +
+                "rating TEXT NOT NULL,"           +
+                "poster TEXT NOT NULL)";
 
         database.execSQL(CREATE_P2_AAD_TABLE) ;
     }
@@ -52,7 +55,7 @@ public class sqliteMediaDB extends SQLiteOpenHelper {
     }
 
 
-    public void addMediaRow(String dbID, String dbTitle) {
+    public void addMediaRow(String dbID, String dbTitle, String dbPoster, String dbRating) {
 
         // 1. get reference to writable DB
         SQLiteDatabase database = this.getWritableDatabase();
@@ -60,10 +63,14 @@ public class sqliteMediaDB extends SQLiteOpenHelper {
         try {
             Log.d("add media to database", dbID.toString());
 
+            // Add the data to the database
             ContentValues values = new ContentValues();
-            values.put (KEY_ID, dbID.toString());
-            values.put (KEY_TITLE, dbTitle.toString());
+            values.put (KEY_ID, dbID);
+            values.put (KEY_TITLE, dbTitle);
+            values.put (KEY_RATING, dbRating);
+            values.put (KEY_POSTER_URI, dbPoster);
 
+            // Insert the information into the database
             database.insert(TABLE_NAME, // table
                     null, //nullColumnHack
                     values); // key/value -> keys = column names/ values = column

@@ -156,7 +156,6 @@
 
     </ScrollView>
 
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/medium_detail_fab"
         android:layout_width="wrap_content"
@@ -167,6 +166,5 @@
         app:backgroundTint="@color/colorPrimaryDark"
         app:layout_anchor="@+id/medium_detail_linearlayout_fab"
         app:layout_anchorGravity="top|right" />
-
 
 </android.support.design.widget.CoordinatorLayout>

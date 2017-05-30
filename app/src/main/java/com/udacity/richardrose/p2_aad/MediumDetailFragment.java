@@ -56,7 +56,7 @@ public class MediumDetailFragment extends Fragment {
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
-    public static final String ARG_ITEM_ID = "item_id";
+    public static final String ARG_ITEM_ID          = "item_id";
     private static final String API_KEY             = TMDB_API_KEY;
 
     // TODO: Pass arguments across from Medium List Activity
@@ -105,6 +105,7 @@ public class MediumDetailFragment extends Fragment {
 
     private SharedPreferences sharedPref;
     SharedPreferences.Editor    editor;
+
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -170,19 +171,34 @@ public class MediumDetailFragment extends Fragment {
                 // TODO: Add/Remove id to the DB
                 Boolean favouriteSetting = false;
 
-                sharedPref = getContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+                sharedPref = getContext().getSharedPreferences("P2_AAD", Context.MODE_PRIVATE);
                 editor = sharedPref.edit();
                 favouriteSetting = sharedPref.getBoolean(mID, favouriteSetting);
-                editor.putBoolean(mID, ((favouriteSetting == true) ? false:true));
+                favouriteSetting = (favouriteSetting==true)? false:true;
+                editor.putBoolean(mID, favouriteSetting);
 
                 // TODO: Save the changes
                 editor.commit();
 
                 // TODO: Toggle the button
-                if (favouriteSetting)
+                if (favouriteSetting) {
+
+                    try {
+                        ((MediumListActivity) getActivity()).buttonOn();
+                    } catch (ClassCastException ex) {
+                        ex.printStackTrace();
+                    }
                     mFabFavourite.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_favorite));
-                else
+
+                }
+                else {
+                    try {
+                        ((MediumListActivity) getActivity()).buttonOff();
+                    } catch (ClassCastException ex) {
+                        ex.printStackTrace();
+                    }
                     mFabFavourite.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_favorite_border));
+                }
 
                 // TODO: Show snackbar message on save/unsave
                 Snackbar.make(coordinatorLayout, mTitle + " set to: " + favouriteSetting.toString(),
@@ -203,6 +219,21 @@ public class MediumDetailFragment extends Fragment {
         return mRootView;
     }
 
+//    public void pushTheButton(boolean flag) {
+//
+//        if (flag) {
+//            buttonInterface.buttonOn();
+//            getContext().
+//        }
+//        else {
+//            buttonInterface.buttonOff();
+//        }
+//    }
+
+
+    public interface OnButtonSelectedListener {
+        public void onButtonSelected(boolean flag);
+    }
 
     /*
      * @Name: getScreenDensity
@@ -505,17 +536,6 @@ public class MediumDetailFragment extends Fragment {
                     .load(mMediaDetail.get(position).getThumbnail())
                     .placeholder(movie_placeholder)
                     .into(holder.mMediumPoster);
-
-            // Check which icon to show
-//            SharedPreferences sharedPref = getContext().getSharedPreferences(mMediaDetail.get(position).getID(), Context.MODE_PRIVATE);
-//            favouriteSetting = sharedPref.getBoolean(mMediaDetail.get(position).getID(), favouriteSetting);
-
-//            if (favouriteSetting)
-//                holder.mMediumFavourite.setImageResource(R.drawable.ic_action_favorite);
-//            else
-//                holder.mMediumFavourite.setImageResource(R.drawable.ic_action_favorite_border);
-
-
         }
 
         @Override
@@ -527,14 +547,12 @@ public class MediumDetailFragment extends Fragment {
             public final View mView;
             public final TextView mMediumTitle;
             public final ImageView mMediumPoster;
-//            public final FloatingActionButton  mMediumFavourite;
 
             public ViewHolder(View view) {
                 super(view);
                 mView               = view;
                 mMediumTitle        = (TextView) view.findViewById(R.id.medium_list_title);
                 mMediumPoster       = (ImageView) view.findViewById(R.id.medium_list_poster);
-//                mMediumFavourite    = (FloatingActionButton) view.findViewById(R.id.medium_detail_fab);
             }
         }
     }

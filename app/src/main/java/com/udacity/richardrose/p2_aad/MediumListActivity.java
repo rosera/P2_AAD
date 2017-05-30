@@ -1,5 +1,6 @@
 package com.udacity.richardrose.p2_aad;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -35,6 +36,7 @@ import com.android.volley.toolbox.Volley;
 import com.squareup.picasso.Picasso;
 import com.udacity.richardrose.p2_aad.DataHandler.Media;
 import com.udacity.richardrose.p2_aad.Util.GridAutofitLayoutManager;
+import com.udacity.richardrose.p2_aad.Util.sqliteMediaDB;
 import com.udacity.richardrose.p2_aad.dummy.DummyContent;
 
 import org.json.JSONArray;
@@ -78,6 +80,10 @@ public class MediumListActivity extends AppCompatActivity {
     private static final int DENSITY_500 = 500;
     private static final int DENSITY_780 = 780;
 
+    private ImageButton mTestMediumFavourite;
+
+    sqliteMediaDB databaseMedia;
+
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
@@ -101,6 +107,9 @@ public class MediumListActivity extends AppCompatActivity {
 //                        .setAction("Action", null).show();
 //            }
 //        });
+
+        // Access the database
+        databaseMedia = new sqliteMediaDB( this);
 
         // Allocate memory for the media download
         if (mMediaInformation == null) {
@@ -141,6 +150,25 @@ public class MediumListActivity extends AppCompatActivity {
 
     }
 
+    MediumDetailFragment.OnButtonSelectedListener mListener;
+
+
+    public void buttonOn() {
+        Toast.makeText(getApplicationContext(),
+            "Button on", Toast.LENGTH_SHORT).show();
+
+        mTestMediumFavourite.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_favorite));
+        return ;
+    }
+
+    public void buttonOff() {
+        Toast.makeText(getApplicationContext(),
+                "Button off", Toast.LENGTH_SHORT).show();
+
+        mTestMediumFavourite.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_favorite_border));
+        return ;
+    }
+
     /*
      * Name: onCreateOptionsMenu
      * @return boolean
@@ -168,6 +196,15 @@ public class MediumListActivity extends AppCompatActivity {
                 // Call to populate the film information
                 onRequestMovieAPI();
                 return true;
+
+            case R.id.show_favourites:
+                // Show the items in the database
+
+//                mSortOrder = getResources().getString(R.string.media_top_rated);;
+                // Call to populate the film information
+//                onRequestMovieAPI();
+                return true;
+
 
             default:
                 break;
@@ -366,6 +403,9 @@ public class MediumListActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     Media Medium =  mMediaInformation.get(holder.getLayoutPosition());
 
+                    // Store the reference to the appropriate button
+                    mTestMediumFavourite = holder.mMediumFavourite;
+
                     if (mTwoPane) {
                         Bundle arguments = new Bundle();
                         arguments.putString(MediumDetailFragment.ARG_MEDIUM_ID, Medium.getID());
@@ -387,41 +427,53 @@ public class MediumListActivity extends AppCompatActivity {
                 }
             });
 
-            // Ensure the favourite button triggers an event
-            holder.mMediumFavourite.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    SharedPreferences           sharedPref;
-                    SharedPreferences.Editor    editor;
-
-                    Media Medium =  mMediaInformation.get(holder.getLayoutPosition());
-
-//                    // TODO: Add/Remove id to the DB
-                    Boolean favouriteSetting=false;
+//            // Ensure the favourite button triggers an event
+//            holder.mMediumFavourite.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
 //
-                    sharedPref = getSharedPreferences("P2_AAD", Context.MODE_PRIVATE);
-
-                    editor = sharedPref.edit();
-                    favouriteSetting = sharedPref.getBoolean(Medium.getID(), favouriteSetting);
-                    favouriteSetting = (favouriteSetting==true) ? false:true;
-                    editor.putBoolean(Medium.getID(), favouriteSetting);
-
-//                    // TODO: Save the changes
-                    editor.commit();
-
-//                    // TODO: Toggle the button
-                    if (favouriteSetting)
-                        holder.mMediumFavourite.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_favorite));
-                    else
-                        holder.mMediumFavourite.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_favorite_border));
-
-                    // TODO: Show snackbar message on save/unsave
-                    Snackbar.make(v, "Pressed favourite button",
-                            Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
-            });
+//                    SharedPreferences           sharedPref;
+//                    SharedPreferences.Editor    editor;
+//
+//                    Media Medium =  mMediaInformation.get(holder.getLayoutPosition());
+//
+////                    // TODO: Add/Remove id to the DB
+//                    Boolean favouriteSetting=false;
+////
+//                    sharedPref = getSharedPreferences("P2_AAD", Context.MODE_PRIVATE);
+//
+//                    editor = sharedPref.edit();
+//                    favouriteSetting = sharedPref.getBoolean(Medium.getID(), favouriteSetting);
+//                    favouriteSetting = (favouriteSetting==true) ? false:true;
+//                    editor.putBoolean(Medium.getID(), favouriteSetting);
+//
+////                    // TODO: Save the changes
+//                    editor.commit();
+//
+////                    // TODO: Toggle the button
+//                    if (favouriteSetting) {
+//                        // Add a favourite
+//                        holder.mMediumFavourite.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_favorite));
+//
+//                        Double rating = Medium.getRating();
+//
+//                        // Call database interface - add Media information
+//                        databaseMedia.addMediaRow(Medium.getID(), Medium.getTitle(), Medium.getThumbnail(), rating.toString());
+//                    }
+//                    else {
+//                        // Delete a favourite
+//                        holder.mMediumFavourite.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_favorite_border));
+//
+//                        // Call database interface - delete media ID
+//                        databaseMedia.deleteMedia(Medium.getID());
+//                    }
+//
+//                    // TODO: Show snackbar message on save/unsave
+//                    Snackbar.make(v, "Pressed favourite button",
+//                            Snackbar.LENGTH_LONG)
+//                            .setAction("Action", null).show();
+//                }
+//            });
         }
 
         @Override
@@ -443,9 +495,9 @@ public class MediumListActivity extends AppCompatActivity {
                 mMediumRating   = (TextView) view.findViewById(R.id.media_rating);
                 mMediumPoster   = (ImageView) view.findViewById(R.id.media_image);
                 mMediumFavourite = (ImageButton) view.findViewById(R.id.media_fav);
+                mTestMediumFavourite = (ImageButton) view.findViewById(R.id.media_fav);
             }
 
         }
     }
-
 }
