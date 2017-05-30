@@ -24,10 +24,11 @@ Phone Version (Pixel)
 
 1. git clone https://github.com/rosera/P2_AAD.git
 2. cd P2_AAD
-3. git clone https://github.com/google/volley.git (i.e. clone into the existing directory in P2_AAD)
+3. git clone https://github.com/google/volley.git (i.e. clone into the existing volley directory in P2_AAD)
+Note: the volley directory needs to be empty for this command to work - feel free to just delete the volley directory as it is just a placeholder!
 4. Start Android Studio
 5. Import the P2_AAD project
-6. Create/Amend a new gradle file - gradle.properties
+6. Create a new gradle file called gradle.properties
 7. Edit gradle.properties and add TMDB_API_KEY="Enter Your valid API KEY" (Note: if you dont already have a valid TMDB API key, sign up at https://developers.themoviedb.org/3/getting-started).
 
 ![Popular Movies phone application](screenshots/gradle-properties-screenshot.png?raw=true "Gradle Properties")
