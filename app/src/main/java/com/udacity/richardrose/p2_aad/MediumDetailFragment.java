@@ -1,11 +1,13 @@
 package com.udacity.richardrose.p2_aad;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
@@ -277,6 +279,9 @@ public class MediumDetailFragment extends Fragment {
         mTrailerAdapter = new MediumDetailFragment.MediumDetailRecyclerViewAdapter(mTrailerInformation);
     }
 
+
+
+
     private void setupRecyclerViewSimilar(@NonNull RecyclerView recyclerView) {
 
         // Autosize the grid layout - initial setting 240
@@ -399,6 +404,9 @@ public class MediumDetailFragment extends Fragment {
         // Queue the async request
         Volley.newRequestQueue(getActivity()).add(mJsonObjectRequest);
     }
+
+
+
 
     private void onRequestMovieSimilar(String mID, int searchType) {
         // TODO: Stage 2: mFilmAPI Query
@@ -526,7 +534,7 @@ public class MediumDetailFragment extends Fragment {
         @Override
         public void onBindViewHolder(final MediumDetailFragment.MediumDetailRecyclerViewAdapter.ViewHolder holder, int position) {
 
-            Boolean favouriteSetting = false;
+//            Boolean favouriteSetting = false;
 
             // Display the title of the media
             holder.mMediumTitle.setText(mMediaDetail.get(position).getTitle());
@@ -536,6 +544,28 @@ public class MediumDetailFragment extends Fragment {
                     .load(mMediaDetail.get(position).getThumbnail())
                     .placeholder(movie_placeholder)
                     .into(holder.mMediumPoster);
+
+
+            // Initiate a click listener for each recyclerview item
+            holder.mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                Media media =  mMediaDetail.get(holder.getLayoutPosition());
+
+                // Play the trailer
+                try {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + media.getID()));
+                    intent.putExtra("force_fullscreen", true);
+                    startActivity(intent);
+
+                } catch (ActivityNotFoundException ex) {
+                    Log.i("Error:", "Playing video on YouTube Application");
+                }
+
+
+                }
+            });
+
         }
 
         @Override
@@ -556,6 +586,25 @@ public class MediumDetailFragment extends Fragment {
             }
         }
     }
+
+    /*
+     * Use an intent to initiate Youtube via Browser or App
+     * NB: Add putExtra to force fullscreen on trailer display
+     *
+     */
+    // TODO: Add intent to play video on youtube
+    public void YouTubeTrailer(String trailerReference) {
+
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(trailerReference));
+            intent.putExtra("force_fullscreen", true);
+            startActivity(intent);
+        } catch (ActivityNotFoundException ex) {
+            Log.i("Error:", "Playing video on YouTube Application");
+        }
+    }
+
+
 
 
 }

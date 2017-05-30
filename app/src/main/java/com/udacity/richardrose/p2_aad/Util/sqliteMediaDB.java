@@ -123,40 +123,40 @@ public class sqliteMediaDB extends SQLiteOpenHelper {
         return;
     }
 
-    public Media getMedia(int id){
-
-        String dbID;
-        String dbTitle;
-        String dbRating;
-        String dbPosterURI;
-
-        // 1. get reference to readable DB
-        SQLiteDatabase database = this.getReadableDatabase();
-
-        // 2. build query
-        Cursor cursor =
-                database.query(TABLE_MEDIA, // a. table
-                        COLUMNS, // b. column names
-                        " id = ?", // c. selections
-                        new String[] { String.valueOf(id) }, // d. selections args
-                        null, // e. group by
-                        null, // f. having
-                        null, // g. order by
-                        null); // h. limit
-
-        if (cursor != null)
-            cursor.moveToFirst();
-
-        dbID        = cursor.getString(0);
-        dbTitle     = cursor.getString(1);
-        dbRating    = cursor.getString(2);
-        dbPosterURI = cursor.getString(3);
-
-        Log.d("getBook("+id+")", dbID.toString());
-
-//        return media;
-        return (Media)null;
-    }
+//    public Media getMedia(int id){
+//
+//        String dbID;
+//        String dbTitle;
+//        String dbRating;
+//        String dbPosterURI;
+//
+//        // 1. get reference to readable DB
+//        SQLiteDatabase database = this.getReadableDatabase();
+//
+//        // 2. build query
+//        Cursor cursor =
+//                database.query(TABLE_MEDIA, // a. table
+//                        COLUMNS, // b. column names
+//                        " id = ?", // c. selections
+//                        new String[] { String.valueOf(id) }, // d. selections args
+//                        null, // e. group by
+//                        null, // f. having
+//                        null, // g. order by
+//                        null); // h. limit
+//
+//        if (cursor != null)
+//            cursor.moveToFirst();
+//
+//        dbID        = cursor.getString(0);
+//        dbTitle     = cursor.getString(1);
+//        dbRating    = cursor.getString(2);
+//        dbPosterURI = cursor.getString(3);
+//
+//        Log.d("getBook("+id+")", dbID.toString());
+//
+////        return media;
+//        return (Media)null;
+//    }
 
 
     public void deleteMedia(String dbID) {
