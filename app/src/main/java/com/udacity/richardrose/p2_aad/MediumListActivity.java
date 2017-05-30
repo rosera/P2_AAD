@@ -65,10 +65,14 @@ public class MediumListActivity extends AppCompatActivity {
     private MediumListRecyclerViewAdapter   mMovieAdapter           = null;
     private ArrayList<Media>                mMediaInformation       = null;
     private String                          mSortOrder              = null;
+    private Media                           mMedium;
 
     // TODO: Change hardwire screen density
     private String                          mScreenDensity          = null;
     private int                             mScreenColumn           = 0;
+
+    final String MOVIE_IMAGE_URI = "http://image.tmdb.org/t/p/";
+
 
     // Screen density settings
     private static final int DENSITY_280 = 280;
@@ -99,14 +103,6 @@ public class MediumListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
         // Access the database
         databaseMedia = new sqliteMediaDB( this);
@@ -158,6 +154,10 @@ public class MediumListActivity extends AppCompatActivity {
             "Button on", Toast.LENGTH_SHORT).show();
 
         mTestMediumFavourite.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_favorite));
+        // Call database interface - add Media information
+        Double tempRating = mMedium.getRating();
+        databaseMedia.addMediaRow(mMedium.getID(), mMedium.getTitle(), mMedium.getThumbnail(), tempRating.toString());
+
         return ;
     }
 
@@ -166,6 +166,10 @@ public class MediumListActivity extends AppCompatActivity {
                 "Button off", Toast.LENGTH_SHORT).show();
 
         mTestMediumFavourite.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_favorite_border));
+
+        // Call database interface - delete media ID
+        databaseMedia.deleteMedia(mMedium.getID());
+
         return ;
     }
 
@@ -202,7 +206,7 @@ public class MediumListActivity extends AppCompatActivity {
 
 //                mSortOrder = getResources().getString(R.string.media_top_rated);;
                 // Call to populate the film information
-//                onRequestMovieAPI();
+                onRequestDBAPI();
                 return true;
 
 
@@ -272,6 +276,18 @@ public class MediumListActivity extends AppCompatActivity {
     }
 
 
+    private void onRequestDBAPI() {
+        // TODO: Clear existing information
+        mMediaInformation.clear();
+
+        // TODO: Loop through the DB, for each item add to the mediaInformation structure
+
+        databaseMedia.getAllMedia(mMediaInformation);
+
+        // TODO: Notify a data set change
+        mMovieAdapter.notifyDataSetChanged();
+    }
+
 
 
     /*
@@ -299,7 +315,6 @@ public class MediumListActivity extends AppCompatActivity {
 
         // TODO: Alter setting - "w92", "w154", "w185", "w342", "w500", "w780", or "original".
         // TODO: Add a setting to allow the user to select image size
-        final String MOVIE_IMAGE_URI = "http://image.tmdb.org/t/p/";
 
         final JsonObjectRequest mJsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, MOVIE_API_URI+mSortOrder+MOVIE_API_KEY,
@@ -401,14 +416,17 @@ public class MediumListActivity extends AppCompatActivity {
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Media Medium =  mMediaInformation.get(holder.getLayoutPosition());
+//                    Media Medium =  mMediaInformation.get(holder.getLayoutPosition());
+
+                    mMedium =  mMediaInformation.get(holder.getLayoutPosition());
 
                     // Store the reference to the appropriate button
                     mTestMediumFavourite = holder.mMediumFavourite;
 
+
                     if (mTwoPane) {
                         Bundle arguments = new Bundle();
-                        arguments.putString(MediumDetailFragment.ARG_MEDIUM_ID, Medium.getID());
+                        arguments.putString(MediumDetailFragment.ARG_MEDIUM_ID, mMedium.getID());
                         arguments.putString(MediumDetailFragment.ARG_MEDIUM_TITLE, holder.mMediumTitle.getText().toString());
 
                         MediumDetailFragment fragment = new MediumDetailFragment();
@@ -420,7 +438,7 @@ public class MediumListActivity extends AppCompatActivity {
                         Context context = v.getContext();
                         Intent intent = new Intent(context, MediumDetailActivity.class);
 
-                        intent.putExtra(MediumDetailFragment.ARG_MEDIUM_ID, Medium.getID());
+                        intent.putExtra(MediumDetailFragment.ARG_MEDIUM_ID, mMedium.getID());
                         intent.putExtra(MediumDetailFragment.ARG_MEDIUM_TITLE, holder.mMediumTitle.getText().toString());
                         context.startActivity(intent);
                     }

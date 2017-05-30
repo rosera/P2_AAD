@@ -10,6 +10,8 @@ import android.util.Log;
 
 import com.udacity.richardrose.p2_aad.DataHandler.Media;
 
+import java.util.ArrayList;
+
 /**
  * Created by richardrose on 27/05/17.
  */
@@ -84,6 +86,43 @@ public class sqliteMediaDB extends SQLiteOpenHelper {
         database.close();
     }
 
+    public void getAllMedia(ArrayList<Media> mediaInformation){
+//        final String MOVIE_IMAGE_URI = "http://image.tmdb.org/t/p/";
+
+        ArrayList<Media> medias = new ArrayList<>();
+        String dbID;
+        String dbTitle;
+        String dbRating;
+        String dbPosterURI;
+
+        // 1. Select statement
+        String query = "SELECT * FROM " + TABLE_NAME;
+
+        // 2. Get ref to db
+        SQLiteDatabase database = this.getWritableDatabase();
+        Cursor cursor = database.rawQuery(query, null);
+
+        // 3. Go through each row
+        Media media = null;
+        if (cursor.moveToFirst()) {
+            do {
+                dbID = cursor.getString(0);
+                dbTitle = cursor.getString(1);
+                dbRating = cursor.getString(2);
+                dbPosterURI = cursor.getString(3);
+
+                // Add the information to the list
+                mediaInformation.add(new Media(dbID, dbPosterURI, dbTitle, Double.parseDouble(dbRating)));
+
+            } while (cursor.moveToNext());
+        }
+        Log.d("Retrieve all media", "Test");
+
+        database.close();
+
+        return;
+    }
+
     public Media getMedia(int id){
 
         String dbID;
@@ -111,7 +150,7 @@ public class sqliteMediaDB extends SQLiteOpenHelper {
         dbID        = cursor.getString(0);
         dbTitle     = cursor.getString(1);
         dbRating    = cursor.getString(2);
-        dbPosterURI = cursor.getString(4);
+        dbPosterURI = cursor.getString(3);
 
         Log.d("getBook("+id+")", dbID.toString());
 
